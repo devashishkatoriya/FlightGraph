@@ -32,6 +32,7 @@ public :
             head[i] = NULL;
     }
     void create();
+    void insert();
     void display();
     void display_city_wise();
     void check_path();
@@ -39,12 +40,9 @@ public :
 
 void Graph::create()								//create()
 {
-    Node *temp;
-    char choice;
-    int i,j;
+    int i;
     cout<<"\nEnter number of Cities : ";
     cin>>n;
-    
     cout<<"\n";
     for(i=0;i<n;i++)
     {
@@ -55,34 +53,61 @@ void Graph::create()								//create()
         head[i]->fuel = 0;
         head[i]->next = NULL;
     }
+}
+void Graph::insert()
+{
+    char name1[LIMIT],name2[LIMIT];
+    int i,j,found1=0,found2=0;
+    cout<<"\nEnter Starting City : ";
+    cin>>name1;
     for(i=0;i<n;i++)
     {
-        for(j=0;j<n;j++)
+        if(strcmp(name1,head[i]->name)==0)
         {
-            if(i!=j)
-            {
-                cout<<"\nIs there any path between "<<head[i]->name<<" and "<<head[j]->name<<" ? ";
-                cin>>choice;
-                if(choice=='y' || choice=='Y')
-                {
-                    temp = new Node;
-                    strcpy(temp->name,head[j]->name);
-                    cout<<"Enter the time taken \t\t: ";
-                    cin>>temp->time;
-                    cout<<"Enter the fuel consumption \t: ";
-                    cin>>temp->fuel;
-                    temp->next = head[i]->next;
-                    head[i]->next = temp;
-                }
-            }
+            found1 = 1;
+            break;
         }
     }
+    if(found1==0)
+    {
+        cout<<"\nCity does not exist!";
+        return;
+    }
+    cout<<"Enter Destination City : ";
+    cin>>name2;
+    if(strcmp(name1,name2)==0)
+    {
+        cout<<"\nStarting and Destination city cannot be same.";
+        return;
+    }
+    for(j=0;j<n;j++)
+    {
+        if(strcmp(name2,head[j]->name)==0)
+        {
+            found2 = 1;
+            break;
+        }
+    }
+    if(found2==0)
+    {
+        cout<<"\nDestination City does not exist!";
+        return;
+    }
+    Node *temp;
+    temp = new Node;
+    strcpy(temp->name,name2);
+    cout<<"Enter Time of Flight : ";
+    cin>>temp->time;
+    cout<<"Enter Fuel Consumed : ";
+    cin>>temp->fuel;
+    temp->next = head[i]->next;
+    head[i]->next = temp;
+    cout<<"\nRoute Successfully added!";
 }
-
 void Graph::display()								//Display data
 {
     Node *temp;
-    int i,j,count;
+    int i,count;
     if(n == 0)
     {
         cout<<"\nEmpty database!";
@@ -112,7 +137,7 @@ void Graph::display_city_wise()								//City-wise
 {
     Node *temp;
     char city[LIMIT];
-    int i,j,count;
+    int i,count;
     if(n == 0)
     {
         cout<<"\nEmpty database!";
@@ -213,10 +238,11 @@ int main()
     {
         ch = 0;
         cout<<"\n\n~~~~~~~~~~~~~~~~~~~~~~~~";
-        cout<<"\n 1 to Read Data.";
-        cout<<"\n 2 to Display Data.";
-        cout<<"\n 3 to Display City-wise.";
-        cout<<"\n 4 to Check for path.";
+        cout<<"\n 1 to Create.";
+        cout<<"\n 2 to Insert.";
+        cout<<"\n 3 to Display Data.";
+        cout<<"\n 4 to Display City-wise.";
+        cout<<"\n 5 to Check for path.";
         cout<<"\n 0 to Exit.";
         cout<<"\nEnter your choice : ";
         cin>>ch;
@@ -225,154 +251,18 @@ int main()
         {
             case 1 : obj.create();
                 break;
-            case 2 : obj.display();
+            case 2 : obj.insert();
                 break;
-            case 3 : obj.display_city_wise();
+            case 3 : obj.display();
                 break;
-            case 4 : obj.check_path();
+            case 4 : obj.display_city_wise();
+                break;
+            case 5 : obj.check_path();
                 break;
             case 0 : break;
             default : cout<<"\nInvalid Option!";
         }
-        
-        /*
-        if(ch!=0)
-        {
-            cout<<"\n\n\n\n\n\n\nPress any key to continue...";
-            cin.ignore();
-            cin.get();
-        }
-        */
     }while(ch!=0);
-    
     cout<<"\nThank you for using this program :)\n\n";
     return 0;
 }
-
-/* OUTPUT
-
-Program to Implement Graph using Adjacency List.
-
-~~~~~~~~~~~~~~~~~~~~~~~~
- 1 to Read Data.
- 2 to Display Data.
- 3 to Display City-wise.
- 4 to Check for path.
- 0 to Exit.
-Enter your choice : 1
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-Enter number of Cities : 3
-
-Enter next city : Nashik
-Enter next city : Mumbai
-Enter next city : Pune
-
-Is there any path between Nashik and Mumbai ? y
-Enter the time taken 		: 123
-Enter the fuel consumption 	: 45
-
-Is there any path between Nashik and Pune ? y
-Enter the time taken 		: 147
-Enter the fuel consumption 	: 258
-
-Is there any path between Mumbai and Nashik ? y
-Enter the time taken 		: 258
-Enter the fuel consumption 	: 369
-
-Is there any path between Mumbai and Pune ? y
-Enter the time taken 		: 456
-Enter the fuel consumption 	: 789
-
-Is there any path between Pune and Nashik ? y
-Enter the time taken 		: 321
-Enter the fuel consumption 	: 564
-
-Is there any path between Pune and Mumbai ? n
-
-
-~~~~~~~~~~~~~~~~~~~~~~~~
- 1 to Read Data.
- 2 to Display Data.
- 3 to Display City-wise.
- 4 to Check for path.
- 0 to Exit.
-Enter your choice : 2
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-----------------------------
-    Here are the Details
-----------------------------
-From	To	Time	Fuel
-----------------------------
-Nashik	Pune	147	258
-Nashik	Mumbai	123	45
-Mumbai	Pune	456	789
-Mumbai	Nashik	258	369
-Pune	Nashik	321	564
-----------------------------
-Total Flights : 5
-
-~~~~~~~~~~~~~~~~~~~~~~~~
- 1 to Read Data.
- 2 to Display Data.
- 3 to Display City-wise.
- 4 to Check for path.
- 0 to Exit.
-Enter your choice : 3
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-Enter City name : Nashik
-
-----------------------------
-    Here are the Details
-----------------------------
-From	To	Time	Fuel
-----------------------------
-Nashik	Pune	147	258
-Nashik	Mumbai	123	45
-----------------------------
-Total Flights : 2
-
-~~~~~~~~~~~~~~~~~~~~~~~~
- 1 to Read Data.
- 2 to Display Data.
- 3 to Display City-wise.
- 4 to Check for path.
- 0 to Exit.
-Enter your choice : 4
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-Enter First city  : Pune
-Enter Second city : Mumbai
-
-Sorry, there are no Flights between Pune and Mumbai
-
-~~~~~~~~~~~~~~~~~~~~~~~~
- 1 to Read Data.
- 2 to Display Data.
- 3 to Display City-wise.
- 4 to Check for path.
- 0 to Exit.
-Enter your choice : 4
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-Enter First city  : Pune
-Enter Second city : Nashik
-
-Yes, there are Flights between Pune and Nashik
-Total Time of Flight   : 321
-Total Fuel Consumption : 564
-
-~~~~~~~~~~~~~~~~~~~~~~~~
- 1 to Read Data.
- 2 to Display Data.
- 3 to Display City-wise.
- 4 to Check for path.
- 0 to Exit.
-Enter your choice : 0
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-Thank you for using this program :)
-
-*/
